@@ -1,0 +1,10 @@
+dev\xsenny\minigame\listeners\GameListener.class
+dev\xsenny\minigame\instance\Arena.class
+dev\xsenny\minigame\GameState.class
+dev\xsenny\minigame\MinigameSkeleton.class
+dev\xsenny\minigame\instance\Countdown.class
+dev\xsenny\minigame\managers\ArenaManager.class
+dev\xsenny\minigame\instance\Game.class
+dev\xsenny\minigame\listeners\ConnectListener.class
+dev\xsenny\minigame\managers\ConfigManager.class
+dev\xsenny\minigame\commands\ArenaCommand.class

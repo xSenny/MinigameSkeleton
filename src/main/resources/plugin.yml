@@ -1,0 +1,6 @@
+name: MinigameSkeleton
+version: '${project.version}'
+main: dev.xsenny.minigame.MinigameSkeleton
+api-version: '1.19'
+commands:
+  arena:
