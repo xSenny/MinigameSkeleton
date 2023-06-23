@@ -3,6 +3,7 @@ package dev.xsenny.minigame.commands;
 import dev.xsenny.minigame.GameState;
 import dev.xsenny.minigame.MinigameSkeleton;
 import dev.xsenny.minigame.instance.Arena;
+import dev.xsenny.minigame.kit.KitUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,6 +27,17 @@ public class ArenaCommand implements CommandExecutor {
                 p.sendMessage(ChatColor.GREEN + "These are available arenas: ");
                 for (Arena arena : plugin.getArenaManager().getArenas()){
                     p.sendMessage(ChatColor.GREEN + "- " + arena.getId() + "(" + arena.getGameState().name() + ")");
+                }
+            }else if (args.length == 1 && args[0].equalsIgnoreCase("kit")){
+                Arena arena = plugin.getArenaManager().getArena(p);
+                if (arena != null){
+                    if (arena.getGameState() != GameState.LIVE){
+                        new KitUI(p);
+                    }else{
+                        p.sendMessage(ChatColor.RED + "You cannot select a kit right neow");
+                    }
+                }else{
+                    p.sendMessage(ChatColor.RED + "you arent in an arena");
                 }
             }else if (args.length == 1 && args[0].equalsIgnoreCase("leave")){
 
@@ -60,7 +72,7 @@ public class ArenaCommand implements CommandExecutor {
                     }
                 }
             }else {
-                p.sendMessage(ChatColor.RED + "Invalid usage! These are the following options: list, leave, join");
+                p.sendMessage(ChatColor.RED + "Invalid usage! These are the following options: list, leave, join, kit");
             }
         }
 

@@ -2,6 +2,10 @@ package dev.xsenny.minigame.instance;
 
 import dev.xsenny.minigame.GameState;
 import dev.xsenny.minigame.MinigameSkeleton;
+import dev.xsenny.minigame.kit.Kit;
+import dev.xsenny.minigame.kit.KitType;
+import dev.xsenny.minigame.kit.type.FighterKit;
+import dev.xsenny.minigame.kit.type.MinerKit;
 import dev.xsenny.minigame.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +26,7 @@ public class Arena {
     private MinigameSkeleton plugin;
     private GameState gameState;
     private List<UUID> players;
+    private HashMap<UUID, Kit> kits;
     private Countdown countdown;
     public Arena(MinigameSkeleton plugin, int id, Location spawn){
         this.id = id;
@@ -29,6 +35,7 @@ public class Arena {
         this.gameState = GameState.RECRUITING;
         this.plugin = plugin;
         this.players = new ArrayList<>();
+        this.kits = new HashMap<>();
         this.countdown = new Countdown(this, plugin);
         this.game = new Game(this);
     }
@@ -54,6 +61,8 @@ public class Arena {
         if (gameState == GameState.RECRUITING && players.size() >= ConfigManager.getRequiredPlayers()){
             countdown.start();
         }
+
+        p.sendMessage(ChatColor.GOLD + "Choose your kit with /arena kit");
     }
 
     public void start(){
@@ -64,10 +73,13 @@ public class Arena {
         if (kickPlayers){
             Location location = ConfigManager.getLobbySpawn();
             for (UUID uuid : players){
-                Bukkit.getPlayer(uuid).teleport(location);
+                Player p = Bukkit.getPlayer(uuid);
+                p.teleport(location);
+                removeKit(p.getUniqueId());
             }
             players.clear();
         }
+        kits.clear();
         sendTitle("", "");
         gameState = GameState.RECRUITING;
         countdown.cancel();
@@ -80,6 +92,7 @@ public class Arena {
         players.remove(p.getUniqueId());
         p.teleport(ConfigManager.getLobbySpawn());
         p.sendTitle("", "");
+        removeKit(p.getUniqueId());
 
         if (gameState == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "There is not enough players. Countdown stopped.");
@@ -127,5 +140,25 @@ public class Arena {
         this.players = players;
     }
 
+    public HashMap<UUID, Kit> getKits(){ return kits; }
 
+    public void removeKit(UUID uuid){
+        if (kits.containsKey(uuid)){
+            kits.get(uuid).remove();
+            kits.remove(uuid);
+        }
+    }
+
+    public void setKit(UUID uuid, KitType type){
+        removeKit(uuid);
+        if (type == KitType.FIGHTER){
+            kits.put(uuid, new FighterKit(plugin, uuid));
+        }else if (type == KitType.MINER){
+            kits.put(uuid, new MinerKit(plugin, uuid));
+        }
+    }
+
+    public KitType getKit(Player p){
+        return kits.containsKey(p.getUniqueId()) ? kits.get(p.getUniqueId()).getType() : null;
+    }
 }

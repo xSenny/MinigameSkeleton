@@ -1,6 +1,7 @@
 package dev.xsenny.minigame.instance;
 
 import dev.xsenny.minigame.GameState;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -21,8 +22,13 @@ public class Game {
         arena.setGameState(GameState.LIVE);
         arena.sendMessage(ChatColor.GREEN + "GAME HAS STARTED, YOUR OBJECTIVE IS TO BREAK 20 BLOCKS.");
 
+        for (UUID uuid : arena.getKits().keySet()){
+            arena.getKits().get(uuid).onStart(Bukkit.getPlayer(uuid));
+        }
+
         for (UUID uuid : arena.getPlayers()){
             points.put(uuid, 0);
+            Bukkit.getPlayer(uuid).closeInventory();
         }
     }
 
