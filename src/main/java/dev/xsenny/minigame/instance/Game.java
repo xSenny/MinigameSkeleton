@@ -36,7 +36,7 @@ public class Game {
         int playerPoints = points.get(p.getUniqueId()) + 1;
         if (playerPoints == 20){
             arena.sendMessage(ChatColor.GOLD + p.getName() + " has won. Thanks for playing. :)");
-            arena.reset(true);
+            arena.reset();
             return;
         }
         points.replace(p.getUniqueId(), playerPoints);

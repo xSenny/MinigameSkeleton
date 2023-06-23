@@ -77,6 +77,10 @@ public class ArenaCommand implements CommandExecutor {
                 if (id >= 0 && id < plugin.getArenaManager().getArenas().size()){
                     Arena arena1 = plugin.getArenaManager().getArena(id);
                     if (arena1 != null && (arena1.getGameState() == GameState.RECRUITING || arena1.getGameState() == GameState.COUNTDOWN)){
+                        if (!arena1.canJoin()){
+                            p.sendMessage(ChatColor.RED + "You cannot join on this arena right neow, its still loading.");
+                            return true;
+                        }
                         p.sendMessage("You aren now playing in Arena " + id);
                         arena1.addPlayer(p);
                     }else{

@@ -4,6 +4,8 @@ import dev.xsenny.minigame.instance.Arena;
 import dev.xsenny.minigame.MinigameSkeleton;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -17,6 +19,9 @@ public class ArenaManager {
     public ArenaManager(MinigameSkeleton plugin){
         FileConfiguration config = plugin.getConfig();
         for (String str : config.getConfigurationSection("arenas").getKeys(false)){
+            World world = Bukkit.createWorld(new WorldCreator(config.getString("arenas." + str + ".world")));
+            world.setAutoSave(false);
+
             arenas.add(new Arena(plugin, Integer.parseInt(str), new Location(
                     Bukkit.getWorld(config.getString("arenas." + str + ".world")),
                     config.getDouble("arenas." + str + ".x"),
@@ -42,6 +47,15 @@ public class ArenaManager {
     public Arena getArena(int id){
         for (Arena arena : arenas){
             if (arena.getId() == id){
+                return arena;
+            }
+        }
+        return null;
+    }
+
+    public Arena getArean(World world){
+        for (Arena arena : arenas){
+            if (arena.getWorld().equals(world)){
                 return arena;
             }
         }

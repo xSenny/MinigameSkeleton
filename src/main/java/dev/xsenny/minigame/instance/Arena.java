@@ -9,9 +9,7 @@ import dev.xsenny.minigame.kit.type.FighterKit;
 import dev.xsenny.minigame.kit.type.MinerKit;
 import dev.xsenny.minigame.managers.ConfigManager;
 import dev.xsenny.minigame.team.Team;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -31,6 +29,7 @@ public class Arena {
     private HashMap<UUID, Team> teams;
     private HashMap<UUID, Kit> kits;
     private Countdown countdown;
+    private boolean canJoin;
     public Arena(MinigameSkeleton plugin, int id, Location spawn){
         this.id = id;
         this.spawn = spawn;
@@ -42,6 +41,7 @@ public class Arena {
         this.teams = new HashMap<>();
         this.countdown = new Countdown(this, plugin);
         this.game = new Game(this);
+        this.canJoin = true;
     }
 
     public void sendMessage(String message){
@@ -84,8 +84,9 @@ public class Arena {
         game.start();
     }
 
-    public void reset(boolean kickPlayers){
-        if (kickPlayers){
+    public void reset(){
+        this.canJoin = false;
+        if (gameState == GameState.LIVE){
             Location location = ConfigManager.getLobbySpawn();
             for (UUID uuid : players){
                 Player p = Bukkit.getPlayer(uuid);
@@ -95,6 +96,11 @@ public class Arena {
             players.clear();
             kits.clear();
             teams.clear();
+
+;
+            Bukkit.unloadWorld(spawn.getWorld(), false);
+            World world = Bukkit.createWorld(new WorldCreator(spawn.getWorld().getName()));
+            world.setAutoSave(false);
         }
         sendTitle("", "");
         gameState = GameState.RECRUITING;
@@ -113,13 +119,13 @@ public class Arena {
 
         if (gameState == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "There is not enough players. Countdown stopped.");
-            reset(false);
+            reset();
             return;
         }
 
         if (gameState == GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "The game has ended as too many players have left.");
-            reset(false);
+            reset();
 
         }
 
@@ -201,4 +207,9 @@ public class Arena {
     }
 
     public Team getTeam(Player p) { return teams.get(p.getUniqueId()); }
+    public World getWorld() { return spawn.getWorld(); }
+
+    public boolean canJoin() { return canJoin; }
+
+    public void toggleCanJoin() { this.canJoin = !this.canJoin; }
 }

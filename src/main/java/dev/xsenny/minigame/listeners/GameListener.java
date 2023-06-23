@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 public class GameListener implements Listener {
 
@@ -18,6 +19,14 @@ public class GameListener implements Listener {
 
     public GameListener(MinigameSkeleton plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onWorldLoad(WorldLoadEvent e){
+        Arena arena = plugin.getArenaManager().getArean(e.getWorld());
+        if (arena != null){
+            arena.toggleCanJoin();
+        }
     }
 
     @EventHandler
