@@ -10,6 +10,7 @@ import dev.xsenny.minigame.kit.type.MinerKit;
 import dev.xsenny.minigame.managers.ConfigManager;
 import dev.xsenny.minigame.team.Team;
 import org.bukkit.*;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -30,11 +31,13 @@ public class Arena {
     private HashMap<UUID, Kit> kits;
     private Countdown countdown;
     private boolean canJoin;
-    public Arena(MinigameSkeleton plugin, int id, Location spawn){
+    private Location sign;
+    public Arena(MinigameSkeleton plugin, int id, Location spawn, Location sign){
         this.id = id;
         this.spawn = spawn;
+        this.sign = sign;
 
-        this.gameState = GameState.RECRUITING;
+        setGameState(GameState.RECRUITING);
         this.plugin = plugin;
         this.players = new ArrayList<>();
         this.kits = new HashMap<>();
@@ -96,17 +99,25 @@ public class Arena {
             players.clear();
             kits.clear();
             teams.clear();
-
-;
+            setGameState(GameState.RECRUITING);
             Bukkit.unloadWorld(spawn.getWorld(), false);
             World world = Bukkit.createWorld(new WorldCreator(spawn.getWorld().getName()));
             world.setAutoSave(false);
         }
         sendTitle("", "");
-        gameState = GameState.RECRUITING;
+
         countdown.cancel();
         countdown = new Countdown(this, plugin);
         game = new Game(this);
+    }
+
+    public void updateSign(String line1, String line2, String line3, String line4){
+        Sign signBlock = (Sign) sign.getBlock().getState();
+        signBlock.setLine(0, line1);
+        signBlock.setLine(1, line2);
+        signBlock.setLine(2, line3);
+        signBlock.setLine(3, line4);
+        signBlock.update();
     }
 
 
@@ -126,9 +137,13 @@ public class Arena {
         if (gameState == GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "The game has ended as too many players have left.");
             reset();
-
+            return;
         }
-
+        updateSign(
+                "Arena " + id,
+                gameState.name(),
+                " ",
+                gameState == GameState.LIVE ? "Players: " + players.size() : "");
     }
 
     public GameState getGameState() {
@@ -137,6 +152,11 @@ public class Arena {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
+        updateSign(
+                "Arena " + id,
+                gameState.name(),
+                " ",
+                gameState == GameState.LIVE ? "Players: " + players.size() : "");
     }
 
     public int getId() {
@@ -212,4 +232,5 @@ public class Arena {
     public boolean canJoin() { return canJoin; }
 
     public void toggleCanJoin() { this.canJoin = !this.canJoin; }
+    public Location getSign() { return sign; }
 }

@@ -5,13 +5,17 @@ import dev.xsenny.minigame.MinigameSkeleton;
 import dev.xsenny.minigame.instance.Arena;
 import dev.xsenny.minigame.kit.KitType;
 import dev.xsenny.minigame.team.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class GameListener implements Listener {
 
@@ -23,10 +27,22 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onWorldLoad(WorldLoadEvent e){
-        Arena arena = plugin.getArenaManager().getArean(e.getWorld());
+        Arena arena = plugin.getArenaManager().getArena(e.getWorld());
         if (arena != null){
             arena.toggleCanJoin();
         }
+    }
+
+    @EventHandler
+    public void onSignClick(PlayerInteractEvent e){
+
+        if (e.getHand() == EquipmentSlot.HAND && e.hasBlock() && e.getClickedBlock().getType() == Material.OAK_WALL_SIGN){
+            Arena arena = plugin.getArenaManager().getArena(e.getClickedBlock().getLocation());
+            if (arena != null){
+                Bukkit.dispatchCommand(e.getPlayer(), "arena join " + arena.getId());
+            }
+        }
+
     }
 
     @EventHandler

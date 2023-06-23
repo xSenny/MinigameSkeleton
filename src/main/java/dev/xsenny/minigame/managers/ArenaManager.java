@@ -23,12 +23,17 @@ public class ArenaManager {
             world.setAutoSave(false);
 
             arenas.add(new Arena(plugin, Integer.parseInt(str), new Location(
-                    Bukkit.getWorld(config.getString("arenas." + str + ".world")),
-                    config.getDouble("arenas." + str + ".x"),
-                    config.getDouble("arenas." + str + ".y"),
-                    config.getDouble("arenas." + str + ".z"),
-                    (float) config.getDouble("arenas." + str + ".yaw"),
-                    (float) config.getDouble("arenas." + str + ".pitch")
+                    Bukkit.getWorld(config.getString("arenas." + str + ".player-spawn.world")),
+                    config.getDouble("arenas." + str + ".player-spawn.x"),
+                    config.getDouble("arenas." + str + ".player-spawn.y"),
+                    config.getDouble("arenas." + str + ".player-spawn.z"),
+                    (float) config.getDouble("arenas." + str + ".player-spawn.yaw"),
+                    (float) config.getDouble("arenas." + str + ".player-spawn.pitch")
+            ), new Location(
+                    Bukkit.getWorld(config.getString("arenas." + str + ".sign.world")),
+                    config.getDouble("arenas." + str + ".sign.x"),
+                    config.getDouble("arenas." + str + ".sign.y"),
+                    config.getDouble("arenas." + str + ".sign.z")
             )));
         }
     }
@@ -53,9 +58,18 @@ public class ArenaManager {
         return null;
     }
 
-    public Arena getArean(World world){
+    public Arena getArena(World world){
         for (Arena arena : arenas){
             if (arena.getWorld().equals(world)){
+                return arena;
+            }
+        }
+        return null;
+    }
+
+    public Arena getArena(Location sign){
+        for (Arena arena : arenas){
+            if (arena.getSign().equals(sign)){
                 return arena;
             }
         }
