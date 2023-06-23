@@ -6,6 +6,7 @@ import dev.xsenny.minigame.listeners.ConnectListener;
 import dev.xsenny.minigame.listeners.GameListener;
 import dev.xsenny.minigame.managers.ArenaManager;
 import dev.xsenny.minigame.managers.ConfigManager;
+import dev.xsenny.minigame.managers.LangManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MinigameSkeleton extends JavaPlugin {
@@ -16,6 +17,7 @@ public final class MinigameSkeleton extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         ConfigManager.setupConfig(this);
+        LangManager.setupLangFile(this);
 
         arenaManager = new ArenaManager(this);
 

@@ -4,6 +4,7 @@ import dev.xsenny.minigame.GameState;
 import dev.xsenny.minigame.MinigameSkeleton;
 import dev.xsenny.minigame.instance.Arena;
 import dev.xsenny.minigame.kit.KitUI;
+import dev.xsenny.minigame.managers.LangManager;
 import dev.xsenny.minigame.team.TeamUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -58,7 +59,7 @@ public class ArenaCommand implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + "You are not in an arena");
                     return true;
                 }
-                p.sendMessage(ChatColor.RED + "You left the arena");
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', LangManager.getLeaveArena()));
                 arena.removePlayer(p);
 
             }else if (args.length == 2 && args[0].equalsIgnoreCase("join")){
