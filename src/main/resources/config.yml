@@ -9,6 +9,13 @@ lobby-spawn:
   pitch: 0
 arenas:
   0:
+    npc-spawn:
+      world: 'world'
+      x: 162.5
+      y: 71
+      z: -2.5
+      yaw: -90
+      pitch: 0
     sign:
       world: 'world'
       x: 166
@@ -22,6 +29,13 @@ arenas:
       yaw: -180
       pitch: 0
   1:
+    npc-spawn:
+      world: 'world'
+      x: 162
+      y: 7
+      z: -5
+      yaw: -180
+      pitch: 0
     sign:
       world: 'world'
       x: 166

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ArenaManager {
 
@@ -34,6 +35,13 @@ public class ArenaManager {
                     config.getDouble("arenas." + str + ".sign.x"),
                     config.getDouble("arenas." + str + ".sign.y"),
                     config.getDouble("arenas." + str + ".sign.z")
+            ), new Location(
+                    Bukkit.getWorld(config.getString("arenas." + str + ".npc-spawn.world")),
+                    config.getDouble("arenas." + str + ".npc-spawn.x"),
+                    config.getDouble("arenas." + str + ".npc-spawn.y"),
+                    config.getDouble("arenas." + str + ".npc-spawn.z"),
+                    (float) config.getDouble("arenas." + str + ".npc-spawn.yaw"),
+                    (float) config.getDouble("arenas." + str + ".npc-spawn.pitch")
             )));
         }
     }
@@ -74,6 +82,15 @@ public class ArenaManager {
             }
         }
         return null;
+    }
+
+    public int getArena(UUID entityUUID){
+        for (Arena arena : arenas){
+            if (arena.getNpc().getUniqueId().equals(entityUUID)){
+                return arena.getId();
+            }
+        }
+        return -1;
     }
 
 }

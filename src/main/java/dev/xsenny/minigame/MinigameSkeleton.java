@@ -1,6 +1,7 @@
 package dev.xsenny.minigame;
 
 import dev.xsenny.minigame.commands.ArenaCommand;
+import dev.xsenny.minigame.instance.Arena;
 import dev.xsenny.minigame.listeners.ConnectListener;
 import dev.xsenny.minigame.listeners.GameListener;
 import dev.xsenny.minigame.managers.ArenaManager;
@@ -29,5 +30,8 @@ public final class MinigameSkeleton extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        for (Arena arena : arenaManager.getArenas()){
+            arena.getNpc().remove();
+        }
     }
 }

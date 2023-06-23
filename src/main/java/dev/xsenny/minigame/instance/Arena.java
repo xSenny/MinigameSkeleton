@@ -11,7 +11,9 @@ import dev.xsenny.minigame.managers.ConfigManager;
 import dev.xsenny.minigame.team.Team;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,8 @@ public class Arena {
     private Countdown countdown;
     private boolean canJoin;
     private Location sign;
-    public Arena(MinigameSkeleton plugin, int id, Location spawn, Location sign){
+    private Villager villager;
+    public Arena(MinigameSkeleton plugin, int id, Location spawn, Location sign, Location npc){
         this.id = id;
         this.spawn = spawn;
         this.sign = sign;
@@ -45,6 +48,14 @@ public class Arena {
         this.countdown = new Countdown(this, plugin);
         this.game = new Game(this);
         this.canJoin = true;
+
+        villager = (Villager) npc.getWorld().spawnEntity(npc, EntityType.VILLAGER);
+        villager.setAI(false);
+        villager.setCollidable(false);
+        villager.setInvulnerable(true);
+        villager.setCustomNameVisible(true);
+        villager.setCustomName(ChatColor.GREEN + "Arena " + id + ChatColor.GRAY + " (Click to join)");
+        villager.setProfession(Villager.Profession.FARMER);
     }
 
     public void sendMessage(String message){
@@ -233,4 +244,5 @@ public class Arena {
 
     public void toggleCanJoin() { this.canJoin = !this.canJoin; }
     public Location getSign() { return sign; }
+    public Villager getNpc() { return villager; }
 }

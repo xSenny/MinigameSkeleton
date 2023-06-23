@@ -8,11 +8,13 @@ import dev.xsenny.minigame.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -31,6 +33,20 @@ public class GameListener implements Listener {
         if (arena != null){
             arena.toggleCanJoin();
         }
+    }
+
+    @EventHandler
+    public void onNpcClick(PlayerInteractAtEntityEvent e){
+
+        if (e.getHand() == EquipmentSlot.HAND && e.getRightClicked().getType() == EntityType.VILLAGER){
+
+            int id = plugin.getArenaManager().getArena(e.getRightClicked().getUniqueId());
+            if (id != -1){
+                Bukkit.dispatchCommand(e.getPlayer(), "arena join " + id);
+            }
+
+        }
+
     }
 
     @EventHandler
