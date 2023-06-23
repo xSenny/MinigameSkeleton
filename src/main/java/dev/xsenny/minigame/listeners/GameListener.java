@@ -4,6 +4,7 @@ import dev.xsenny.minigame.GameState;
 import dev.xsenny.minigame.MinigameSkeleton;
 import dev.xsenny.minigame.instance.Arena;
 import dev.xsenny.minigame.kit.KitType;
+import dev.xsenny.minigame.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,6 +39,20 @@ public class GameListener implements Listener {
 
                 p.closeInventory();
             }
+        }else if (e.getView().getTitle().contains("Team Selection") && e.getInventory() != null && e.getCurrentItem() != null){
+            Team team = Team.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
+
+            Arena arena = plugin.getArenaManager().getArena(p);
+            if (arena != null){
+                if (arena.getTeam(p) != team){
+                    p.sendMessage(ChatColor.AQUA + "You are now on " + team.getDisplay() + ChatColor.AQUA + " team!");
+                    arena.setTeam(p, team);
+                }else{
+                    p.sendMessage(ChatColor.RED + "You are already on this team.");
+                }
+            }
+            p.closeInventory();
+            e.setCancelled(true);
         }
     }
 
