@@ -191,7 +191,7 @@ public class Arena {
     }
 
     public void setTeam(Player p, Team team){
-        removePlayer(p);
+        removeTeam(p);
         teams.put(p.getUniqueId(), team);
     }
 
